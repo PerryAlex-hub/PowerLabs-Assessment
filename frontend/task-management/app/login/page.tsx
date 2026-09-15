@@ -3,8 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
+import { CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { ApiError } from "@/lib/api";
+
+const inputClasses =
+  "rounded-lg border border-(--border) bg-(--surface) px-3.5 py-2.5 text-sm outline-none transition-shadow focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20";
+
+const labelClasses = "text-xs font-medium uppercase tracking-wide text-(--muted)";
 
 export default function LoginPage() {
   const { user, login } = useAuth();
@@ -34,13 +40,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center p-6">
-      <h1 className="mb-6 text-xl font-semibold">Log in</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {error && <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+    <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-6 py-12">
+      <div className="mb-8 flex flex-col items-center gap-2 text-center">
+        <CheckCircle2 className="h-8 w-8 text-(--accent)" strokeWidth={2} />
+        <h1 className="text-xl font-semibold tracking-tight">Welcome back</h1>
+        <p className="text-sm text-(--muted)">Log in to see your tasks.</p>
+      </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="text-sm font-medium text-zinc-700">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 rounded-2xl border border-(--border) bg-(--surface) p-6 shadow-sm"
+      >
+        {error && (
+          <p className="rounded-lg bg-red-50 px-3.5 py-2.5 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-400">
+            {error}
+          </p>
+        )}
+
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="email" className={labelClasses}>
             Email
           </label>
           <input
@@ -49,12 +67,13 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="rounded border border-zinc-300 px-3 py-2"
+            autoFocus
+            className={inputClasses}
           />
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="text-sm font-medium text-zinc-700">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="password" className={labelClasses}>
             Password
           </label>
           <input
@@ -63,21 +82,22 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="rounded border border-zinc-300 px-3 py-2"
+            className={inputClasses}
           />
         </div>
 
         <button
           type="submit"
           disabled={submitting}
-          className="rounded bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-700 disabled:opacity-50"
+          className="mt-1 rounded-lg bg-(--accent) px-4 py-2.5 text-sm font-medium text-(--accent-foreground) transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {submitting ? "Logging in…" : "Log in"}
         </button>
       </form>
-      <p className="mt-4 text-sm text-zinc-500">
+
+      <p className="mt-6 text-center text-sm text-(--muted)">
         No account?{" "}
-        <Link href="/signup" className="text-zinc-900 underline">
+        <Link href="/signup" className="font-medium text-(--accent) hover:underline">
           Sign up
         </Link>
       </p>

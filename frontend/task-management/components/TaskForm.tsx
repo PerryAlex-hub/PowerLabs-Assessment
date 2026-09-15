@@ -10,6 +10,11 @@ interface TaskFormProps {
   submitLabel: string;
 }
 
+const inputClasses =
+  "rounded-lg border border-(--border) bg-(--surface) px-3.5 py-2.5 text-sm outline-none transition-shadow focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20";
+
+const labelClasses = "text-xs font-medium uppercase tracking-wide text-(--muted)";
+
 export function TaskForm({ initialTask, onSubmit, submitLabel }: TaskFormProps) {
   const [title, setTitle] = useState(initialTask?.title ?? "");
   const [description, setDescription] = useState(initialTask?.description ?? "");
@@ -36,11 +41,18 @@ export function TaskForm({ initialTask, onSubmit, submitLabel }: TaskFormProps) 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {error && <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-5 rounded-2xl border border-(--border) bg-(--surface) p-6 shadow-sm"
+    >
+      {error && (
+        <p className="rounded-lg bg-red-50 px-3.5 py-2.5 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-400">
+          {error}
+        </p>
+      )}
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="title" className="text-sm font-medium text-zinc-700">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="title" className={labelClasses}>
           Title
         </label>
         <input
@@ -49,12 +61,13 @@ export function TaskForm({ initialTask, onSubmit, submitLabel }: TaskFormProps) 
           onChange={(e) => setTitle(e.target.value)}
           required
           maxLength={200}
-          className="rounded border border-zinc-300 px-3 py-2"
+          placeholder="What needs to be done?"
+          className={inputClasses}
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="description" className="text-sm font-medium text-zinc-700">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="description" className={labelClasses}>
           Description
         </label>
         <textarea
@@ -63,28 +76,29 @@ export function TaskForm({ initialTask, onSubmit, submitLabel }: TaskFormProps) 
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           maxLength={2000}
-          className="rounded border border-zinc-300 px-3 py-2"
+          placeholder="Add more detail (optional)"
+          className={`${inputClasses} resize-none`}
         />
       </div>
 
       <div className="flex gap-4">
-        <div className="flex flex-1 flex-col gap-1">
-          <label htmlFor="status" className="text-sm font-medium text-zinc-700">
+        <div className="flex flex-1 flex-col gap-1.5">
+          <label htmlFor="status" className={labelClasses}>
             Status
           </label>
           <select
             id="status"
             value={status}
             onChange={(e) => setStatus(e.target.value as TaskStatus)}
-            className="rounded border border-zinc-300 px-3 py-2"
+            className={inputClasses}
           >
             <option value="TODO">To do</option>
             <option value="IN_PROGRESS">In progress</option>
             <option value="DONE">Done</option>
           </select>
         </div>
-        <div className="flex flex-1 flex-col gap-1">
-          <label htmlFor="dueDate" className="text-sm font-medium text-zinc-700">
+        <div className="flex flex-1 flex-col gap-1.5">
+          <label htmlFor="dueDate" className={labelClasses}>
             Due date
           </label>
           <input
@@ -92,7 +106,7 @@ export function TaskForm({ initialTask, onSubmit, submitLabel }: TaskFormProps) 
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="rounded border border-zinc-300 px-3 py-2"
+            className={inputClasses}
           />
         </div>
       </div>
@@ -100,7 +114,7 @@ export function TaskForm({ initialTask, onSubmit, submitLabel }: TaskFormProps) 
       <button
         type="submit"
         disabled={submitting}
-        className="rounded bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-700 disabled:opacity-50"
+        className="mt-1 rounded-lg bg-(--accent) px-4 py-2.5 text-sm font-medium text-(--accent-foreground) transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {submitting ? "Saving…" : submitLabel}
       </button>
