@@ -13,23 +13,6 @@ A task management app: users sign up, log in, and manage their own tasks (create
 | Validation | Zod |
 | Frontend | Next.js (App Router), TypeScript, Tailwind CSS |
 
-## Repository structure
-
-```
-backend/                 Express API
-  prisma/schema.prisma   Database schema
-  src/
-    config/env.ts        Startup-time env var validation
-    db/prisma.ts          Prisma client singleton
-    errors/               Custom error classes
-    middleware/           Auth guard, validation, error handling
-    modules/
-      auth/               Signup, login, logout, current-user
-      tasks/               Task CRUD, scoped per user
-    app.ts / server.ts
-
-frontend/task-management/  Next.js app (scaffolded; UI not yet built — see Status below)
-```
 
 ## Data model
 
@@ -104,10 +87,6 @@ All routes require the auth cookie (set by signup/login) and only ever operate o
 | DELETE | `/:id` | Delete a task |
 
 A request for a task ID that doesn't exist, or belongs to another user, returns `404` in both cases — the API never reveals whether a task exists if you don't own it.
-
-## Frontend
-
-The Next.js app under `frontend/task-management` is scaffolded (`create-next-app`, TypeScript, Tailwind) but the actual UI — auth pages, task list, create/edit forms — has not been built yet. This is the main outstanding piece of work; see Status below.
 
 ## Assumptions and notable decisions
 
