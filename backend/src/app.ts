@@ -6,6 +6,7 @@ import { env } from "./config/env.js";
 import { notFound } from "./middleware/notFound.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import authRoutes from "./modules/auth/auth.routes.js";
+import tasksRoutes from "./modules/tasks/tasks.routes.js";
 
 const app = express();
 
@@ -19,8 +20,8 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/tasks", tasksRoutes);
 
-// Routes for tasks are mounted above this line once they're built.
 app.use(notFound);
 app.use(errorHandler);
 
