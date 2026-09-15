@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Calendar, ClipboardList, Plus, Trash2 } from "lucide-react";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { RequireAuth } from "@/components/RequireAuth";
 import { StatusBadge } from "@/components/StatusBadge";
 import { ApiError, tasksApi } from "@/lib/api";
@@ -67,6 +68,7 @@ function TaskListResults({ status }: { status: TaskStatus | "" }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     tasksApi
@@ -76,8 +78,10 @@ function TaskListResults({ status }: { status: TaskStatus | "" }) {
       .finally(() => setLoading(false));
   }, [status]);
 
-  async function handleDelete(id: string) {
-    if (!confirm("Delete this task? This can't be undone.")) return;
+  async function confirmDelete() {
+    if (!pendingDeleteId) return;
+    const id = pendingDeleteId;
+    setPendingDeleteId(null);
     await tasksApi.remove(id);
     setTasks((prev) => prev.filter((task) => task.id !== id));
   }
@@ -109,11 +113,22 @@ function TaskListResults({ status }: { status: TaskStatus | "" }) {
   }
 
   return (
-    <ul className="flex flex-col gap-2">
-      {tasks.map((task) => (
-        <TaskRow key={task.id} task={task} onDelete={() => handleDelete(task.id)} />
-      ))}
-    </ul>
+    <>
+      <ul className="flex flex-col gap-2">
+        {tasks.map((task) => (
+          <TaskRow key={task.id} task={task} onDelete={() => setPendingDeleteId(task.id)} />
+        ))}
+      </ul>
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title="Delete this task?"
+        description="This can't be undone."
+        confirmLabel="Delete"
+        destructive
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDeleteId(null)}
+      />
+    </>
   );
 }
 

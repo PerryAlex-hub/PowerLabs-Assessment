@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Calendar, Clock, Pencil, Trash2 } from "lucide-react";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { RequireAuth } from "@/components/RequireAuth";
 import { StatusBadge } from "@/components/StatusBadge";
 import { ApiError, tasksApi } from "@/lib/api";
@@ -24,6 +25,7 @@ function TaskDetail({ id }: { id: string }) {
   const [task, setTask] = useState<Task | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   useEffect(() => {
     tasksApi
@@ -34,7 +36,6 @@ function TaskDetail({ id }: { id: string }) {
   }, [id]);
 
   async function handleDelete() {
-    if (!confirm("Delete this task? This can't be undone.")) return;
     await tasksApi.remove(id);
     router.push("/");
   }
@@ -78,7 +79,7 @@ function TaskDetail({ id }: { id: string }) {
               Edit
             </Link>
             <button
-              onClick={handleDelete}
+              onClick={() => setConfirmingDelete(true)}
               className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/40"
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -87,6 +88,16 @@ function TaskDetail({ id }: { id: string }) {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="Delete this task?"
+        description="This can't be undone."
+        confirmLabel="Delete"
+        destructive
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </div>
   );
 }
