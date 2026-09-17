@@ -94,5 +94,4 @@ A request for a task ID that doesn't exist, or belongs to another user, returns 
 - **JWT in an httpOnly cookie**, not `localStorage` — keeps the token inaccessible to JavaScript running on the page, which limits exposure if the frontend ever had an XSS bug. No refresh-token rotation; the token simply expires after 1 hour.
 - **No email verification or password reset** — out of scope for the assessment's time window. Password rules are minimum-length only (8 characters), no complexity requirements.
 - **Ownership checks return 404, not 403**, when a task exists but belongs to someone else — this avoids confirming a task's existence to a user who shouldn't be able to see it.
-- **No separate repository layer** between services and Prisma — Prisma's client is already a thin, typed query layer, so an additional repository abstraction would mostly forward calls without adding value at this project's size.
 - **PATCH over PUT** for updates, since every update in this app is a partial update.
