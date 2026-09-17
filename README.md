@@ -1,6 +1,6 @@
 # Task Management Application
 
-A task management app: users sign up, log in, and manage their own tasks (create, view, update, delete). Built for the Software Engineering Internship practical assessment.
+A task management app: users sign up, log in, and manage their own tasks (create, view, update, delete). Built for PowerLabs Software Engineering Internship practical assessment.
 
 ## Tech stack
 
